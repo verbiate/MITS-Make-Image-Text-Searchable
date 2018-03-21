@@ -1,4 +1,4 @@
-# Make Screenshots Searchable
+# Make Image Text Searchable
 
 ## Requirements:
 * macOS 10.10 or higher

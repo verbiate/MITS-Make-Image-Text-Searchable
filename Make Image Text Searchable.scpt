@@ -1,4 +1,5 @@
---Make Screenshots Searchable v1.0b
+--Make Image Text Searchable v1.0b
+--https://github.com/verbiate/Make-Image-Text-Searchable/
 
 --Requirements:
 --macOS 10.10 or higher
@@ -17,7 +18,6 @@
 --To install Tesseract
 --1. Open Terminal
 --2. Enter the following command: brew install tesseract
-
 
 --TO DO
 --Automate installation of Tesseract

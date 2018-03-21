@@ -54,7 +54,6 @@ tell application "Finder"
 	set theImages to every file of entire contents of theRootFolder whose name extension is scanFileType
 	
 	-- Update the initial progress information
-	--set theImageCount to length of theImages
 	set theImageCount to length of theImages
 	set AppleScript's progress total steps to theImageCount
 	set AppleScript's progress completed steps to 0

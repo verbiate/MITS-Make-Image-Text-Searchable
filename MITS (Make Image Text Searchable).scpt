@@ -1,5 +1,5 @@
---Make Image Text Searchable v1.0b
---https://github.com/verbiate/Make-Image-Text-Searchable/
+--MITS (Make Image Text Searchable) v1.0b
+--https://github.com/verbiate/MITS-Make-Image-Text-Searchable
 
 --Requirements:
 --macOS 10.10 or higher

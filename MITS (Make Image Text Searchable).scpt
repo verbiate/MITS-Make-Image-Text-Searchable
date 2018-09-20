@@ -1,5 +1,7 @@
---MITS (Make Image Text Searchable) v1.0b
+--MITS (Make Image Text Searchable) v2.0b
 --https://github.com/verbiate/MITS-Make-Image-Text-Searchable
+
+-- New in 2.0b - MITS will now automatically skip images that have been scanned before, making processing much faster in some cases. All comments get prepended with "#MITS" when getting processed. So long as "#MITS" remains at the start of the comment, the image will be skipped automatically during the next scan.
 
 --Requirements:
 --macOS 10.10 or higher
@@ -20,7 +22,7 @@
 --2. Enter the following command: brew install tesseract
 
 --TO DO
---Automate installation of Tesseract
+--Automate installation of Tesseract?
 
 --Prompt user for which images to scan
 choose from list {"Process PNG images", "Process JPG images"} with title "Select a filetype" with prompt "First, select the type of image you want to process. We'll select the folder to scan next." default items "Process PNG images" OK button name "Continue" cancel button name "Cancel" multiple selections allowed "false" empty selection allowed "false"
@@ -71,21 +73,41 @@ tell application "Finder"
 		-- Store the previous comments to append to later
 		set previous_comment to comment of this_file
 		
-		-- Use Tesseract to process the image
-		set this_file to (the POSIX path of (this_file as alias))
-		tell application "Terminal"
+		-- Determine whether the file has been scanned before
+		set oldDelims to AppleScript's text item delimiters
+		set AppleScript's text item delimiters to return
+		if previous_comment is "" then
+			set first_word to ""
+		else
 			try
-				set ocrOutput to do shell script "usr/local/bin/tesseract " & quoted form of this_file & " stdout"
-				log ocrOutput
+				set first_word to first text item of previous_comment
 			end try
-		end tell
+		end if
 		
-		set this_file to this_file as POSIX file as alias
+		log first_word
+		if first_word is "#MITS" then
+			log "Skip this file"
+		else
+			log "Scan this file"
+			
+			-- Use Tesseract to process the image
+			set this_file to (the POSIX path of (this_file as alias))
+			tell application "Terminal"
+				try
+					set ocrOutput to do shell script "usr/local/bin/tesseract " & quoted form of this_file & " stdout"
+					log ocrOutput
+				end try
+			end tell
+			
+			set this_file to this_file as POSIX file as alias
+			
+			try
+				--Append the OCR output to the current comments, if any exist
+				set comment of this_file to "#MITS" & return & return & previous_comment & ocrOutput & return
+			end try
+			
+		end if
 		
-		try
-			--Append the OCR output to the current comments, if any exist
-			set comment of this_file to previous_comment & ocrOutput & return
-		end try
 		
 		-- Increment the progress for the progress bar
 		set a to a + 1
